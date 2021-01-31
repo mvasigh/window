@@ -1,3 +1,5 @@
+use num_traits::Float;
+use std::f64;
 use nannou::math::{Angle, Rad};
 use nannou::prelude::*;
 
@@ -28,18 +30,18 @@ impl Square {
         self.points[2]
     }
 
-    fn update(&mut self) {
+    fn update(&mut self, frames: &f32) {
         let mut new_points = Vec::new();
         for p in self.points.iter() {
             let mut new_p = p.clone();
 
             // scale the point
-            new_p *= 0.995;
+            new_p *= 0.9922;
 
             // rotate about center
             // x` = x cos 𝜃 - y sin 𝜃
             // y` = y cos 𝜃 + x sin 𝜃
-            let angle = Rad(PI / 64.0);
+            let angle = Rad((PI / 64.0) + (frames.sin() / 32.0));
             let cos = Rad::cos(angle);
             let sin = Rad::sin(angle);
             let x = new_p.x;
@@ -95,12 +97,14 @@ fn model(app: &App) -> Model {
 }
 
 fn update(app: &App, model: &mut Model, _update: Update) {
-    if app.elapsed_frames() < 400 {
+    let elapsed_frames = app.elapsed_frames();
+    if app.elapsed_frames() < 120 {
         return;
     }
 
-    for square in model.squares.iter_mut() {
-        square.update();
+    for (i, square) in model.squares.iter_mut().enumerate() {
+        let frames = (elapsed_frames as f32 + i as f32) / 20.0;
+        square.update(&frames);
     }
 
     if (app.elapsed_frames() % 40) == 0 {
@@ -116,14 +120,14 @@ fn view(app: &App, model: &Model, frame: Frame) {
         draw.background().color(BLACK);
     }
 
-    if app.elapsed_frames() < 400 {
+    if app.elapsed_frames() < 120 {
         draw.to_frame(app, &frame).unwrap();
         return;
     }
 
     draw.rect()
         .w_h(WIDTH, HEIGHT)
-        .color(srgba(0.0, 0.0, 0.0, 0.15));
+        .color(srgba(0.0, 0.0, 0.0, 0.075));
     for square in model.squares.iter().rev() {
         square.draw(&draw);
     }

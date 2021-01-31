@@ -2538,6 +2538,7 @@ name = "window"
 version = "0.1.0"
 dependencies = [
  "nannou",
+ "num-traits 0.2.14",
 ]
 
 [[package]]

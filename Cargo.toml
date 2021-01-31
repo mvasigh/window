@@ -7,3 +7,4 @@ edition = "2018"
 
 [dependencies]
 nannou  = "0.15"
+num-traits = "0.2"
