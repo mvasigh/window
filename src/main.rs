@@ -35,8 +35,8 @@ impl Square {
         for p in self.points.iter() {
             let mut new_p = p.clone();
 
-            // scale the point
-            new_p *= 0.9922;
+            // scale the point to a magic number, lol
+            new_p *= 0.9925;
 
             // rotate about center
             // x` = x cos 𝜃 - y sin 𝜃
